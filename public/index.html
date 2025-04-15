@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Conversations</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+     <!-- Animate.css -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="newStyle.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Header -->
+        <div class="app-header">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-whatsapp fs-4 me-2"></i>
+                <h4 class="m-0">WhatsApp Conversations Management</h4>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="action-btn" id="darkModeToggle">
+                    <i class="bi bi-moon-fill"></i>
+                </button>
+                <button class="btn btn-success filter-btn d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#ClinetModal"
+                id="open-client-model">
+                    <i class="bi bi-plus-lg"></i>
+                    Add Client
+                </button>
+                <button class="btn btn-outline-light filter-btn d-flex align-items-center gap-1">
+                    <i class="bi bi-funnel"></i>
+                    Filter
+                </button>
+            </div>
+        </div>
+
+<!-- Modal for add client -->
+<div class="modal fade" id="ClinetModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-body p-4">
+                <!-- Header with close button -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="modal-title m-0">Add New Client</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Input group with icon -->
+                <div class="mb-4">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-person-plus"></i>
+                        </span>
+                        <input id="client-name" class="form-control border-start-0 ps-0" type="text"
+                            placeholder="Enter client name" autocomplete="off">
+                    </div>
+                    <div class="form-text">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Use alphanumeric characters without spaces (e.g., client-1, office01)
+                    </div>
+                </div>
+
+                <!-- Action button -->
+                <button id="add-client-btn" class="btn btn-primary btn-lg w-100 position-relative mb-4">
+                    <span class="d-flex align-items-center justify-content-center">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" id="btn-spinner"></span>
+                        <span id="btn-text">Generate QR Code</span>
+                    </span>
+                </button>
+
+                <!-- QR code container -->
+                <div id="qr-codes-container" class="text-center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Modal for Chat Selection -->
+        <div class="modal fade" id="chatSelectionModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="chatSelectionModalLabel">Select a Chat</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="chat-list" class="list-group">
+                            <!-- Chats will be dynamically inserted here -->
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-0">
+            <div class="col-lg-8 sidebar">
+                <div class="p-3">
+                    <h5 class="mb-3">Recent Activity</h5>
+                        <div class="table-responsive border">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th class="fw-bold">Client</th>
+                                        <th class="fw-bold">Sender</th>
+                                        <th class="fw-bold">Last Message</th>
+                                        <th class="fw-bold">Status</th>
+                                        <th class="fw-bold">Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="conversations-table-body">
+                                    <!-- Conversations will be dynamically inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-4 chat-window">
+                <div class="chat-header p-3 border-bottom d-flex justify-content-between align-items-center">
+                    <div class="contact-info">
+                        <div class="contact-avatar" id="contact-avatar">O</div>
+                        <div class="contact-details" id="chat-title">
+                            <h6></h6>
+                            <small></small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-messages d-flex flex-column" id="messages-container">
+   
+                </div>
+                
+                <div class="chat-input">
+                    <div id="reply-indicator" class="reply-indicator"></div>
+                    <div class="input-group">
+                        <!-- <button class="btn btn-light">
+                            <i class="bi bi-emoji-smile"></i>
+                        </button>
+                        <button class="btn btn-light">
+                            <i class="bi bi-paperclip"></i>
+                        </button> -->
+                        <input type="text" id="reply-message" class="form-control" placeholder="Type a message">
+                        <button id="reply-client-btn" class="btn text-white" style="background-color: var(--primary-color);">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <!-- Bootstrap 5 JS (optional, for certain components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Link to the external JavaScript file -->
+    <script src="/script.js"></script>
+    
+
+</body>
+
+</html>

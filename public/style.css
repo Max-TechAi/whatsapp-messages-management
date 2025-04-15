@@ -1,0 +1,79 @@
+.theme-toggle:hover {
+    cursor: pointer;
+}
+
+[data-bs-theme="dark"] .theme-toggle .bi-moon-fill,
+[data-bs-theme="light"] .theme-toggle .bi-sun-fill {
+    display: none;
+}
+
+.tableWrap-md {
+    max-height: 67vh;
+    min-height: 67vh;
+}
+.tableWrap-md table thead {
+top: -1px;
+z-index: 1 !important;
+}
+
+.tableWrap-md table tbody {
+top: -1px;
+z-index: 1 !important;
+}
+
+/* Custom styles for received and sent messages */
+.received {
+    background-color: #e8f5e9;
+    /* Light green for received messages */
+}
+
+.sent {
+    background-color: #e3f2fd;
+    /* Light blue for sent messages */
+}
+
+/* Add some padding and margin to the table */
+.table-container {
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+/* Style for QR code container */
+.qr-code-container {
+    margin: 20px;
+    text-align: center;
+}
+
+.qr-code-container img {
+    max-width: 200px;
+    height: auto;
+}
+
+body {
+    /* background-image: url("bg.png"); */
+}
+.fs-13 {
+    font-size: 13px;
+}
+
+.bg-secondary {
+    --bs-bg-opacity: 1;
+    background-color: rgba(236, 240, 241, var(--bs-bg-opacity)) !important;
+  }
+  .bg-success {
+    --bs-bg-opacity: 1;
+    background-color: rgba(26, 188, 156, var(--bs-bg-opacity)) !important;
+  }
+.bg-primary {
+    --bs-bg-opacity: 1;
+    background-color: rgba(207, 226, 255, var(--bs-bg-opacity)) !important;
+  }
+.w30px {
+    width: 25px !important;
+    /* max-width: 20px !important; */
+}
+.w50px {
+    width: 100px !important;
+    /* max-width: 20px !important; */
+}
