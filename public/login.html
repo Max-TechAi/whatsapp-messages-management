@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #128C7E, #25D366);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #075E54;
+        }
+
+        input {
+            width: 100%;
+            padding-block: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.8rem;
+            background: #128C7E;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0A7A6A;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>تسجيل الدخول</h2>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="البريد الإلكتروني" required />
+            <input type="password" id="password" placeholder="كلمة المرور" required />
+            <button type="submit">دخول</button>
+        </form>
+        <a href="register.html" style="display: block; margin-top: 1rem; color: #128C7E; text-decoration: none;">إنشاء حساب جديد</a>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7xYOh3DieU2heHsoGg6IDuuuYkuByKC4",
+            authDomain: "whatsapp-messages-management.firebaseapp.com",
+            projectId: "whatsapp-messages-management",
+            storageBucket: "whatsapp-messages-management.firebasestorage.app",
+            messagingSenderId: "491455745725",
+            appId: "1:491455745725:web:a20733e5773c84f0e4b1d4",
+            measurementId: "G-EVN2KEJY1G",
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+    // Handle login form submission
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            localStorage.setItem("email", user.email); // Save user data to local storage
+            
+
+            // إرسال UID للسيرفر
+            const res = await fetch("/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ uid: user.uid }),
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                alert(data.message);
+                // Redirect to index.html
+                window.location.href = data.redirect;
+            } else {
+                alert(`Login failed: ${data.error}`);
+            }
+        } catch (err) {
+            alert("خطأ في تسجيل الدخول: " + err.message);
+        }
+    });
+    </script>
+</body>
+
+</html>

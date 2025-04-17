@@ -166,9 +166,14 @@ body {
     font-size: 0.7rem;
     color: #999;
     text-align: right;
-    margin-top: 3px;
+    /* margin-top: 3px; */
 }
-
+.message-sentby {
+    font-size: 0.7rem;
+    color: #818181;
+    text-align: right;
+    margin: 0px;
+}
 .chat-input {
     background: white;
     padding: 15px;

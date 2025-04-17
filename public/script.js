@@ -1,6 +1,18 @@
+// Redirect to login page if not logged in
+if (!localStorage.getItem("email")) {
+  window.location.href = "/"; // Redirect to login.html
+}
+
 const addClientBtn = document.getElementById("add-client-btn");
 const btnSpinner = document.getElementById("btn-spinner");
 const btnText = document.getElementById("btn-text");
+
+const logoutButton = document.getElementById("logout-btn");
+
+const userNameElement = document.getElementById("user-name");
+const userName = localStorage.getItem("email") || "Guest";
+
+userNameElement.textContent = `Logged in as: ${userName}`;
 
 const SendMsgBtn = document.getElementById("reply-client-btn");
 const qrCodesContainer = document.getElementById("qr-codes-container");
@@ -97,6 +109,11 @@ async function initClient(isInit) {
   }
 }
 
+logoutButton.addEventListener("click", () => {
+  localStorage.removeItem("email"); // Clear user data
+  window.location.href = "/"; // Redirect to login page
+});
+
 ClinetModal.addEventListener("hidden.bs.modal", function () {
   // put your default event here
   qrCodesContainer.innerHTML = "";
@@ -155,6 +172,7 @@ function drawConverstion() {
       ? "<div class='alert alert-info' role='alert'>No conversations yet.</div>"
       : conversationArr
           .map((conv) => {
+            console.log("conv", conv);
             let contentHtml;
             if (conv.content.type === "image") {
               contentHtml = `
@@ -302,6 +320,7 @@ SendMsgBtn.addEventListener("click", async () => {
             clientId: conversationArr[0].clientId,
             message,
             chatid: conversationArr[0].chatid,
+            userName,
           }),
         });
         if (!response.ok) {

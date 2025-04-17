@@ -1,13 +1,25 @@
 const express = require("express");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode");
-const { json } = require("body-parser");
+const bodyParser = require("body-parser");
+const authRoutes = require("./routes/auth");
 const app = express();
 const port = 3000;
 const path = require("path");
 
+app.get("/register", (req, res) => {
+  res.sendFile(__dirname + "/public/register.html");
+});
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/login.html");
+});
+
 app.use(express.static("public"));
 app.use(express.json());
+
+// ربط المسارات
+app.use("/auth", authRoutes);
 
 // First, add Socket.IO setup at the top of server.js after your existing requires
 const http = require("http");
@@ -803,15 +815,13 @@ app.post("/initializeClients", async (req, res) => {
 
 // Route to send a reply
 app.post("/replyconversation", async (req, res) => {
-  //const  = req.params.conversationId;
-  const { clientId, message, chatid } = JSON.parse(req.body);
+  const { clientId, message, chatid, userName } = JSON.parse(req.body);
   const client = clients[clientId];
   try {
-    // res.status(200).json({ client: clients[clientId],clientId:req.body });
-    // return
     if (client) {
       try {
-        await client.sendMessage(chatid, message);
+        const messageWithUserName = `${message}\n\n<div class='message-sentby'>Sent by: ${userName}</div>`; // Append userName to the message
+        await client.sendMessage(chatid, messageWithUserName);
         res.json({ success: true });
       } catch (error) {
         console.error("Error sending message:", error);
